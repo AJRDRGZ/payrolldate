@@ -1,9 +1,9 @@
-# Payroll times
+# Payroll dates
 
-Go package for calculate payroll times suchs as days360, workdays and networkdays.
+Go package for calculate payroll dates.
 
 Install
 
 ```bash
-    go get -u github.com/AJRDRGZ/payrolltime
+    go get -u github.com/AJRDRGZ/payrolldate
 ```
