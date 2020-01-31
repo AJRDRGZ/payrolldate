@@ -18,7 +18,6 @@ func Days360(start, end time.Time) int {
 	startYear, startMonth, startDay := start.Date()
 	endYear, endMonth, endDay := end.Date()
 
-	sortDates(&start, &end)
 	fixLastDay(&startDay)
 	fixLastDay(&endDay)
 	if IsLastDayOfFebruary(end) {
@@ -26,13 +25,6 @@ func Days360(start, end time.Time) int {
 	}
 
 	return diffDaysBetweenYears(endYear, startYear) + diffDaysBetweenMonths(endMonth, startMonth) + diffDays(endDay, startDay)
-}
-
-// sortDates validate and sort start and end dates
-func sortDates(start, end *time.Time) {
-	if start.After(*end) {
-		*start, *end = *end, *start
-	}
 }
 
 // fixLastDay returns 30 if day is 31
