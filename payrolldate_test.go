@@ -55,7 +55,7 @@ func TestEndDateOfMonth(t *testing.T) {
 	}
 	for _, tt := range tests {
 		got := EndDateOfMonth(tt.args)
-		if (got.Year() != tt.want.Year()) || (got.Month() != tt.want.Month()) || (got.Day() != tt.want.Day()) {
+		if got != tt.want {
 			t.Errorf("EndDateOfMonth(%v) = %v, want %v", tt.args, got, tt.want)
 		}
 	}

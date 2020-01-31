@@ -40,7 +40,9 @@ func IsLastDayOfFebruary(date time.Time) bool {
 
 // EndDateOfMonth returns the end date of the month
 func EndDateOfMonth(date time.Time) time.Time {
-	return StartDateOfMonth(date).AddDate(0, 1, 0).Add(-time.Nanosecond)
+	e := StartDateOfMonth(date).AddDate(0, 1, 0).Add(-time.Nanosecond)
+	y, m, d := e.Date()
+	return time.Date(y, m, d, 0, 0, 0, 0, date.Location())
 }
 
 // StartDateOfMonth returns the start date of the month
