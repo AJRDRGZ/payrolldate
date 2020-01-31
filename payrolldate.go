@@ -14,23 +14,47 @@ import "time"
 //	  to the 30th.
 // 	- All months are considered to last 30 days and hence a full year has 360 days
 //  - Always add one day for sum the last day of endDate
-func Days360(startDate, endDate time.Time) int {
-	startYear, startMonth, startDay := startDate.Date()
-	endYear, endMonth, endDay := endDate.Date()
+func Days360(start, end time.Time) int {
+	startYear, startMonth, startDay := start.Date()
+	endYear, endMonth, endDay := end.Date()
 
-	if startDay == 31 {
-		startDay = 30
-	}
-
-	if endDay == 31 {
+	sortDates(&start, &end)
+	fixLastDay(&startDay)
+	fixLastDay(&endDay)
+	if IsLastDayOfFebruary(end) {
 		endDay = 30
 	}
 
-	if IsLastDayOfFebruary(endDate) {
-		endDay = 30
-	}
+	return diffDaysBetweenYears(endYear, startYear) + diffDaysBetweenMonths(endMonth, startMonth) + diffDays(endDay, startDay)
+}
 
-	return ((endYear - startYear) * 360) + (int(endMonth-startMonth) * 30) + (endDay - startDay) + 1
+// sortDates validate and sort start and end dates
+func sortDates(start, end *time.Time) {
+	if start.After(*end) {
+		*start, *end = *end, *start
+	}
+}
+
+// fixLastDay returns 30 if day is 31
+func fixLastDay(day *int) {
+	if *day == 31 {
+		*day = 30
+	}
+}
+
+// diffDaysBetweenYears returns 360 days times between two years
+func diffDaysBetweenYears(end, start int) int {
+	return (end - start) * 360
+}
+
+// diffDaysBetweenMonths returns 30 days times betwwen two months
+func diffDaysBetweenMonths(end, start time.Month) int {
+	return int(end - start) * 30
+}
+
+// diffDays returns diff days between
+func diffDays(end, start int) int {
+	return end - start + 1
 }
 
 // IsLastDayOfFebruary returns true if the date is the last day of february
