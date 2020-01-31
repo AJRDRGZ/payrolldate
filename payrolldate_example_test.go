@@ -46,11 +46,11 @@ func ExampleIsLastDayOfFebruary() {
 }
 
 func ExampleDays360() {
-	start := Date("2020-01-31")
-	end := Date("2020-02-15")
+	start := Date("2020-02-05")
+	end := Date("2020-03-03")
 	days := Days360(start, end)
 	fmt.Println(days)
 
 	// Output:
-	// 16
+	// 29
 }
