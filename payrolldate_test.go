@@ -110,3 +110,23 @@ func TestDays360(t *testing.T) {
 		}
 	}
 }
+
+func TestPreviousDate360(t *testing.T) {
+	tests := []struct {
+		date time.Time
+		want time.Time
+	}{
+		{Date("2021-11-30"), Date("2020-12-01")},
+		{Date("2024-02-29"), Date("2023-03-01")},
+		{Date("2024-02-28"), Date("2023-03-01")},
+		{Date("2021-10-31"), Date("2020-11-01")},
+		{Date("2021-10-30"), Date("2020-11-01")},
+		{Date("2021-09-18"), Date("2020-09-19")},
+		{Date("2025-02-28"), Date("2024-02-29")},
+	}
+	for _, tt := range tests {
+		if got := PreviousDate360(tt.date); got != tt.want {
+			t.Errorf("PreviousDate360(%v) = %v, want %v", tt.date, got, tt.want)
+		}
+	}
+}
