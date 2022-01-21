@@ -2,6 +2,11 @@ package payrolldate
 
 import "time"
 
+const (
+	days365 = time.Hour * 24 * 365
+	days364 = time.Hour * 24 * 364
+)
+
 // Days360 returns the difference between two days based on the 360 day year.
 //
 // Algorithm based in https://en.wikipedia.org/wiki/360-day_calendar, this function
@@ -59,4 +64,28 @@ func Date(date string) time.Time {
 		panic(err)
 	}
 	return d
+}
+
+// PreviousDate360 returns the start date of a date counting previous 360 days
+func PreviousDate360(date time.Time) time.Time {
+	newDate := time.Time{}
+	increaseDays := days364
+
+	if IsLastDayOfFebruary(date) {
+		increaseDays = days365
+	}
+
+	newDate = date.Add(increaseDays * -1)
+
+	if newDate.Day() == 31 {
+		newDate = newDate.Add(time.Hour * 24)
+	}
+
+	return newDate
+}
+
+// IsLeapYear returns true if is leap year
+func IsLeapYear(date time.Time) bool {
+	year := date.Year()
+	return year%4 == 0 && (year%100 != 0 || year%400 == 0)
 }
