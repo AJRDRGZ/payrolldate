@@ -1,6 +1,9 @@
 package payrolldate
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 const (
 	days365 = time.Hour * 24 * 365
@@ -68,20 +71,22 @@ func Date(date string) time.Time {
 
 // PreviousDate360 returns the start date of a date counting previous 360 days
 func PreviousDate360(date time.Time) time.Time {
-	newDate := time.Time{}
-	increaseDays := days364
+	year, month, day := date.Date()
 
-	if IsLastDayOfFebruary(date) {
-		increaseDays = days365
+	if month == 12 && (day == 30 || day == 31) {
+		return Date(fmt.Sprintf("%d-01-01", year))
 	}
 
-	newDate = date.Add(increaseDays * -1)
-
-	if newDate.Day() == 31 {
-		newDate = newDate.Add(time.Hour * 24)
+	if IsLastDayOfFebruary(date) || day == 30 || day == 31 {
+		return Date(fmt.Sprintf("%d-%02d-01", year-1, month+1))
 	}
 
-	return newDate
+	day++
+	if month == 2 && !IsLeapYear(Date(fmt.Sprintf("%d-02-01", year-1))) && day > 28 {
+		day = 28
+	}
+
+	return Date(fmt.Sprintf("%d-%02d-%02d", year-1, month, day))
 }
 
 // IsLeapYear returns true if is leap year
