@@ -77,12 +77,19 @@ func PreviousDate360(date time.Time) time.Time {
 		return Date(fmt.Sprintf("%d-01-01", year))
 	}
 
+	// Cuando la fecha es 28 de febrero de un año festivo, siempre retornaremos el 01 de marzo del año pasado.
+	// Sabemos que la diferencia de días es 358 y no 360, pero es imposible llegar a 360 días.
+	// Por esta razón se decidió devolver esta fecha y asumir que este es el cálculo correcto.
+	if IsLeapYear(year) && month == 2 && day == 28 {
+		return Date(fmt.Sprintf("%d-03-01", year-1))
+	}
+
 	if IsLastDayOfFebruary(date) || day == 30 || day == 31 {
 		return Date(fmt.Sprintf("%d-%02d-01", year-1, month+1))
 	}
 
 	day++
-	if month == 2 && !IsLeapYear(Date(fmt.Sprintf("%d-02-01", year-1))) && day > 28 {
+	if month == 2 && !IsLeapYear(year-1) && day > 28 {
 		day = 28
 	}
 
@@ -90,7 +97,6 @@ func PreviousDate360(date time.Time) time.Time {
 }
 
 // IsLeapYear returns true if is leap year
-func IsLeapYear(date time.Time) bool {
-	year := date.Year()
+func IsLeapYear(year int) bool {
 	return year%4 == 0 && (year%100 != 0 || year%400 == 0)
 }
